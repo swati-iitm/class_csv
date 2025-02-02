@@ -18,21 +18,21 @@ app.add_middleware(
 students = []
 with open('q-fastapi.csv', mode='r') as file:
     reader = csv.DictReader(file)
-    for row in reader:
-        students.append({
-            "studentId": int(row["studentId"]),
-            "class": row["class"]
-        })
+    #for row in reader:
+        #students.append({
+            #"studentId": int(row["studentId"]),
+            #"class": row["class"]
+        #})
 
 @app.get("/")
 async def get_students(class: Optional[List[str]] = Query(None)):
     print(f"Requested classes: {class}")  # Debugging line
     return class
-    if class:
-        filtered_students = [student for student in students if student["class"] in class]
-        print(f"Filtered students: {filtered_students}")  # Debugging line
-        return {"students": filtered_students}
-    return {"students": students}
+    #if class:
+        #filtered_students = [student for student in students if student["class"] in class]
+        #print(f"Filtered students: {filtered_students}")  # Debugging line
+        #return {"students": filtered_students}
+    #return {"students": students}
 
 if __name__ == "__main__":
     import uvicorn
