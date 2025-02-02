@@ -27,7 +27,7 @@ with open('q-fastapi.csv', mode='r') as file:
 @app.get("/api")
 async def get_students(class: Optional[List[str]] = Query(None)):
     print(f"Requested classes: {class}")  # Debugging line
-    if class_:
+    if class:
         filtered_students = [student for student in students if student["class"] in class]
         print(f"Filtered students: {filtered_students}")  # Debugging line
         return {"students": filtered_students}
