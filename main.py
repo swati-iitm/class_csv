@@ -16,7 +16,7 @@ app.add_middleware(
 
 # Load student data from the specified CSV file
 students = []
-with open('q-fastapi.csv', mode='r') as file:
+#with open('q-fastapi.csv', mode='r') as file:
     reader = csv.DictReader(file)
     #for row in reader:
         #students.append({
