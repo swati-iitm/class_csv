@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Query
 from fastapi.middleware.cors import CORSMiddleware
 from typing import List, Optional
-import json
+import csv
 
 app = FastAPI()
 
@@ -14,27 +14,24 @@ app.add_middleware(
     allow_headers=["*"],  # Allow all headers
 )
 
-# Load student data from the specified JSON file
-file_path = "q-vercel-python_2.json"
+# Load student data from the specified CSV file
+students = []
+with open('q-fastapi.csv', mode='r') as file:
+    reader = csv.DictReader(file)
+    for row in reader:
+        students.append({
+            "studentId": int(row["studentId"]),
+            "class": row["class"]
+        })
 
-try:
-    with open(file_path, "r") as file:
-        students = json.load(file)  # Load data into `students`
-except FileNotFoundError:
-    students = []  # Default to an empty list if the file is missing
-
-# Convert list of students to a dictionary for quick lookup
-students_dict = {entry["name"]: entry["marks"] for entry in students}
-
-@app.get("/")
-async def get_students(name: Optional[List[str]] = Query(default=[])):
-    """Fetch student marks based on optional name filtering while maintaining order."""
-    if name:
-        # Preserve the order in which names are passed
-        filtered_marks = [students_dict.get(n, None) for n in name]
-        return {"marks": filtered_marks}
-    
-    return {"marks": students}  # Return all data if no filter is applied
+@app.get("/api")
+async def get_students(class_: Optional[List[str]] = Query(None)):
+    print(f"Requested classes: {class}")  # Debugging line
+    if class_:
+        filtered_students = [student for student in students if student["class"] in class]
+        print(f"Filtered students: {filtered_students}")  # Debugging line
+        return {"students": filtered_students}
+    return {"students": students}
 
 if __name__ == "__main__":
     import uvicorn
